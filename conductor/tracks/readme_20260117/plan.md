@@ -3,10 +3,10 @@
 This plan outlines the creation of a comprehensive README.md file, ensuring clear documentation for both Windows and Unix users.
 
 ## Phase 1: Core Documentation
-- [ ] Task: Create initial README structure and introductory sections.
-    - [ ] Write Title, Description, and Core Features sections.
-    - [ ] Define Prerequisites for both platforms.
-- [ ] Task: Implement Installation & Usage sections.
+- [x] Task: Create initial README structure and introductory sections. 5d02a0c
+    - [x] Write Title, Description, and Core Features sections.
+    - [x] Define Prerequisites for both platforms.
+- [~] Task: Implement Installation & Usage sections.
     - [ ] Write Direct Execution instructions (clone and run).
     - [ ] Write One-Liner installation placeholders.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Core Documentation' (Protocol in workflow.md)
