@@ -123,6 +123,20 @@ function Set-SSHKeys {
     Show-PublicKey "$keyFile.pub"
 }
 
+function Show-SSHWalkthrough {
+    Log-Info "Guided Walkthrough: Adding your SSH key to GitHub/GitLab"
+    Write-Host ""
+    Write-Host "1. Copy the public key shown above (starting with 'ssh-ed25519...')"
+    Write-Host "2. Log in to your Git provider (GitHub, GitLab, etc.)"
+    Write-Host "3. Go to 'Settings' -> 'SSH and GPG keys'"
+    Write-Host "4. Click 'New SSH Key'"
+    Write-Host "5. Give it a descriptive title (e.g., 'My Windows Laptop')"
+    Write-Host "6. Paste your key into the 'Key' field"
+    Write-Host "7. Click 'Add SSH Key'"
+    Write-Host ""
+    Read-Host "Press Enter when you have completed these steps"
+}
+
 function Show-PublicKey {
     param([string]$PubKeyFile)
     Log-Info "Your Public SSH Key:"
@@ -142,6 +156,8 @@ function Main {
     }
     Set-GitIdentity
     Set-SSHKeys
+    Show-SSHWalkthrough
+    Log-Success "Initial setup complete!"
 }
 
 # Run Main

@@ -133,6 +133,21 @@ setup_ssh() {
     show_public_key "$key_file.pub"
 }
 
+show_ssh_walkthrough() {
+    log_info "Guided Walkthrough: Adding your SSH key to GitHub/GitLab"
+    echo ""
+    echo "1. Copy the public key shown above (starting with 'ssh-ed25519...')"
+    echo "2. Log in to your Git provider (GitHub, GitLab, etc.)"
+    echo "3. Go to 'Settings' -> 'SSH and GPG keys'"
+    echo "4. Click 'New SSH Key'"
+    echo "5. Give it a descriptive title (e.g., 'My Windows Laptop')"
+    echo "6. Paste your key into the 'Key' field"
+    echo "7. Click 'Add SSH Key'"
+    echo ""
+    echo "Press Enter when you have completed these steps..."
+    read
+}
+
 show_public_key() {
     local pub_key_file=$1
     log_info "Your Public SSH Key:"
@@ -146,6 +161,8 @@ main() {
     check_git
     configure_identity
     setup_ssh
+    show_ssh_walkthrough
+    log_success "Initial setup complete!"
 }
 
 # Only run main if executed directly

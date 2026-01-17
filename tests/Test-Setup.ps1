@@ -30,4 +30,10 @@ if ($content -notmatch "function Set-SSHKeys") {
     exit 1
 }
 
+# Check for Show-SSHWalkthrough function
+if ($content -notmatch "function Show-SSHWalkthrough") {
+    Write-Error "FAIL: Show-SSHWalkthrough function not found in setup.ps1"
+    exit 1
+}
+
 Write-Host "PASS: setup.ps1 structure check"

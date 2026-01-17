@@ -34,4 +34,10 @@ if ! grep -q "setup_ssh" ./setup.sh; then
     exit 1
 fi
 
+# Check for show_ssh_walkthrough function
+if ! grep -q "show_ssh_walkthrough" ./setup.sh; then
+    echo "FAIL: show_ssh_walkthrough function not found in setup.sh"
+    exit 1
+fi
+
 echo "PASS: setup.sh structure check"
