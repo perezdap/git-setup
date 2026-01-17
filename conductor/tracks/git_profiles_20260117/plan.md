@@ -2,14 +2,14 @@
 
 This plan outlines the implementation of folder-based Git identity profiles using Git's `includeIf` feature, supporting both Bash and PowerShell environments.
 
-## Phase 1: Foundation & Profile Listing
+## Phase 1: Foundation & Profile Listing [checkpoint: 45738b7]
 - [x] Task: Implement a mechanism to parse existing `includeIf` entries from `.gitconfig`. a6a496f
     - [x] Bash: Add helper to extract `includeIf` paths and their corresponding config files.
     - [x] PowerShell: Add helper to extract `includeIf` paths and their corresponding config files.
 - [x] Task: Implement the "List Profiles" functionality. fb15ead
     - [x] Bash: Create `list_profiles` function.
     - [x] PowerShell: Create `Show-GitProfiles` function.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Profile Listing' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Profile Listing' (Protocol in workflow.md) 45738b7
 
 ## Phase 2: Interactive Profile Creation
 - [ ] Task: Implement the "Add Profile" wizard.
