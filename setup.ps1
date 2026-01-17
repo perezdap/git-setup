@@ -249,6 +249,7 @@ function Remove-GitProfile {
     Show-GitProfiles
     $num = Read-Host "Enter the number of the profile to remove"
     
+    $idx = 0
     if (-not [int]::TryParse($num, [ref]$idx) -or $idx -lt 1 -or $idx -gt $profiles.Count) {
         Log-Error "Invalid selection."
         return
@@ -279,6 +280,7 @@ function Edit-GitProfile {
     Show-GitProfiles
     $num = Read-Host "Enter the number of the profile to edit"
     
+    $idx = 0
     if (-not [int]::TryParse($num, [ref]$idx) -or $idx -lt 1 -or $idx -gt $profiles.Count) {
         Log-Error "Invalid selection."
         return
@@ -297,10 +299,29 @@ function Edit-GitProfile {
     $email = Read-Host "Enter new email [$currentEmail]"
     if (-not $email) { $email = $currentEmail }
     
-    git config -f $selected.ConfigPath user.name "$name"
-    git config -f $selected.ConfigPath user.email "$email"
-    
-    Log-Success "Profile updated."
+    log_success "Profile updated."
+}
+
+function Show-ProfileMenu {
+    while ($true) {
+        Log-Info "--- Manage Folder-Based Git Profiles ---"
+        Write-Host "1. List Profiles"
+        Write-Host "2. Add New Profile"
+        Write-Host "3. Edit Existing Profile"
+        Write-Host "4. Remove Profile"
+        Write-Host "5. Back to Main Menu"
+        $choice = Read-Host "Select an option [1-5]"
+        
+        switch ($choice) {
+            "1" { Show-GitProfiles }
+            "2" { Add-GitProfile }
+            "3" { Edit-GitProfile }
+            "4" { Remove-GitProfile }
+            "5" { return }
+            default { Log-Error "Invalid option." }
+        }
+        Write-Host ""
+    }
 }
 
 function Main {
@@ -308,10 +329,23 @@ function Main {
     if (-not (Test-GitInstalled)) {
         Install-Git
     }
-    Set-GitIdentity
-    Set-SSHKeys
-    Show-SSHWalkthrough
-    Log-Success "Initial setup complete!"
+    
+    while ($true) {
+        Write-Host "`n--- Main Menu ---"
+        Write-Host "1. Configure Global Identity"
+        Write-Host "2. Setup SSH Keys"
+        Write-Host "3. Manage Folder-Based Profiles"
+        Write-Host "4. Exit"
+        $mainChoice = Read-Host "Select an option [1-4]"
+        
+        switch ($mainChoice) {
+            "1" { Set-GitIdentity }
+            "2" { Set-SSHKeys; Show-SSHWalkthrough }
+            "3" { Show-ProfileMenu }
+            "4" { Log-Success "Exiting. Happy coding!"; return }
+            default { Log-Error "Invalid option." }
+        }
+    }
 }
 
 # Run Main only if executed directly

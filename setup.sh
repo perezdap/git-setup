@@ -323,13 +323,50 @@ edit_profile() {
     log_success "Profile updated."
 }
 
+manage_profiles() {
+    while true; do
+        log_info "--- Manage Folder-Based Git Profiles ---"
+        echo "1. List Profiles"
+        echo "2. Add New Profile"
+        echo "3. Edit Existing Profile"
+        echo "4. Remove Profile"
+        echo "5. Back to Main Menu"
+        echo -n "Select an option [1-5]: "
+        read choice
+        
+        case $choice in
+            1) list_profiles ;;
+            2) add_profile ;;
+            3) edit_profile ;;
+            4) remove_profile ;;
+            5) return ;;
+            *) log_error "Invalid option." ;;
+        esac
+        echo ""
+    done
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
-    configure_identity
-    setup_ssh
-    show_ssh_walkthrough
-    log_success "Initial setup complete!"
+    
+    while true; do
+        echo "--- Main Menu ---"
+        echo "1. Configure Global Identity"
+        echo "2. Setup SSH Keys"
+        echo "3. Manage Folder-Based Profiles"
+        echo "4. Exit"
+        echo -n "Select an option [1-4]: "
+        read main_choice
+        
+        case $main_choice in
+            1) configure_identity ;;
+            2) setup_ssh; show_ssh_walkthrough ;;
+            3) manage_profiles ;;
+            4) log_success "Exiting. Happy coding!"; exit 0 ;;
+            *) log_error "Invalid option." ;;
+        esac
+    done
 }
 
 # Only run main if executed directly
