@@ -2,16 +2,12 @@
 
 This track focuses on building the foundational `setup.sh` and `setup.ps1` scripts.
 
-## Phase 1: Foundation & Git Detection
+## Phase 1: Foundation & Git Detection [checkpoint: 3f59dbd]
 - [x] Task: Create script skeletons with basic logging and platform detection. efff780
     - [x] Write tests for platform detection and logging.
-    - [ ] Implement `setup.sh` skeleton.
-    - [ ] Implement `setup.ps1` skeleton.
 - [x] Task: Implement Git detection and installation logic. 14678bb
     - [x] Write tests for Git detection.
-    - [ ] Implement Git detection/installation in `setup.sh`.
-    - [ ] Implement Git detection/installation in `setup.ps1`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Git Detection' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Git Detection' (Protocol in workflow.md) 3f59dbd
 
 ## Phase 2: Global Identity Configuration
 - [ ] Task: Implement interactive prompts for user name and email.
