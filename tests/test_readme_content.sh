@@ -21,6 +21,11 @@ required_strings=(
     "./setup.sh"
     ".\setup.ps1"
     "### Option 2: One-Liner (Remote)"
+    "## Troubleshooting"
+    "Set-ExecutionPolicy"
+    "## Contributing"
+    "## License"
+    "MIT License"
 )
 
 for str in "${required_strings[@]}"; do

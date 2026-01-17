@@ -18,7 +18,12 @@ $RequiredStrings = @(
     "git clone https://github.com/perezdap/git-setup.git",
     "./setup.sh",
     ".\setup.ps1",
-    "### Option 2: One-Liner (Remote)"
+    "### Option 2: One-Liner (Remote)",
+    "## Troubleshooting",
+    "Set-ExecutionPolicy",
+    "## Contributing",
+    "## License",
+    "MIT License"
 )
 
 foreach ($str in $RequiredStrings) {

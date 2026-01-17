@@ -59,3 +59,29 @@ You can run this tool by cloning the repository or executing a one-liner directl
   curl -sL https://raw.githubusercontent.com/perezdap/git-setup/main/setup.sh | bash
   \\\
 
+
+## Troubleshooting
+
+### Windows Execution Policy
+If you encounter an error stating that "running scripts is disabled on this system," you need to set the execution policy for your current session:
+\\\powershell
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+\\\
+
+### Git Not Found
+The script attempts to install Git if it's missing, but if the installation fails, please install it manually from [git-scm.com](https://git-scm.com/downloads).
+
+## Contributing
+
+Contributions are welcome! If you have suggestions for improvements or encounter bugs, please open an issue or submit a pull request.
+
+1. Fork the repository.
+2. Create your feature branch (\git checkout -b feature/AmazingFeature\).
+3. Commit your changes (\git commit -m 'feat: Add some AmazingFeature'\).
+4. Push to the branch (\git push origin feature/AmazingFeature\).
+5. Open a Pull Request.
+
+## License
+
+Distributed under the MIT License. See \LICENSE\ for more information.
+
