@@ -19,3 +19,43 @@ A cross-platform, interactive tool to seamlessly configure your Git environment 
 ### macOS / Linux
 - **Shell**: Bash 3.2+
 - **Git**: Pre-installed or available via package manager (apt, dnf, brew, etc.)
+
+## Installation & Usage
+
+You can run this tool by cloning the repository or executing a one-liner directly from your terminal.
+
+### Option 1: Direct Execution (Recommended)
+
+1. **Clone the repository:**
+   \\\ash
+   git clone https://github.com/perezdap/git-setup.git
+   cd git-setup
+   \\\
+
+2. **Run the script:**
+
+   - **Windows (PowerShell):**
+     \\\powershell
+     .\setup.ps1
+     \\\
+
+   - **macOS / Linux:**
+     \\\ash
+     chmod +x setup.sh
+     ./setup.sh
+     \\\
+
+### Option 2: One-Liner (Remote)
+
+*Note: These commands fetch the latest version from the main branch.*
+
+- **Windows (PowerShell):**
+  \\\powershell
+  iex (irm https://raw.githubusercontent.com/perezdap/git-setup/main/setup.ps1)
+  \\\
+
+- **macOS / Linux:**
+  \\\ash
+  curl -sL https://raw.githubusercontent.com/perezdap/git-setup/main/setup.sh | bash
+  \\\
+

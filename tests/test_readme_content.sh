@@ -15,6 +15,12 @@ required_strings=(
     "## Prerequisites"
     "Windows PowerShell 5.1+"
     "Bash 3.2+"
+    "## Installation & Usage"
+    "### Option 1: Direct Execution"
+    "git clone https://github.com/perezdap/git-setup.git"
+    "./setup.sh"
+    ".\setup.ps1"
+    "### Option 2: One-Liner (Remote)"
 )
 
 for str in "${required_strings[@]}"; do
