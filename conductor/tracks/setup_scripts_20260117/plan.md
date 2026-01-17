@@ -10,8 +10,8 @@ This track focuses on building the foundational `setup.sh` and `setup.ps1` scrip
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Git Detection' (Protocol in workflow.md) 3f59dbd
 
 ## Phase 2: Global Identity Configuration
-- [ ] Task: Implement interactive prompts for user name and email.
-    - [ ] Write tests for input validation.
+- [x] Task: Implement interactive prompts for user name and email. b387330
+    - [x] Write tests for input validation.
     - [ ] Implement identity configuration in `setup.sh`.
     - [ ] Implement identity configuration in `setup.ps1`.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Global Identity Configuration' (Protocol in workflow.md)
