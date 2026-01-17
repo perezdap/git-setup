@@ -27,46 +27,45 @@ You can run this tool by cloning the repository or executing a one-liner directl
 ### Option 1: Direct Execution (Recommended)
 
 1. **Clone the repository:**
-   \\\ash
+   ```bash
    git clone https://github.com/perezdap/git-setup.git
    cd git-setup
-   \\\
+   ```
 
 2. **Run the script:**
 
    - **Windows (PowerShell):**
-     \\\powershell
+     ```powershell
      .\setup.ps1
-     \\\
+     ```
 
    - **macOS / Linux:**
-     \\\ash
+     ```bash
      chmod +x setup.sh
      ./setup.sh
-     \\\
+     ```
 
 ### Option 2: One-Liner (Remote)
 
 *Note: These commands fetch the latest version from the main branch.*
 
 - **Windows (PowerShell):**
-  \\\powershell
+  ```powershell
   iex (irm https://raw.githubusercontent.com/perezdap/git-setup/main/setup.ps1)
-  \\\
+  ```
 
 - **macOS / Linux:**
-  \\\ash
+  ```bash
   curl -sL https://raw.githubusercontent.com/perezdap/git-setup/main/setup.sh | bash
-  \\\
-
+  ```
 
 ## Troubleshooting
 
 ### Windows Execution Policy
 If you encounter an error stating that "running scripts is disabled on this system," you need to set the execution policy for your current session:
-\\\powershell
+```powershell
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
-\\\
+```
 
 ### Git Not Found
 The script attempts to install Git if it's missing, but if the installation fails, please install it manually from [git-scm.com](https://git-scm.com/downloads).
@@ -76,12 +75,11 @@ The script attempts to install Git if it's missing, but if the installation fail
 Contributions are welcome! If you have suggestions for improvements or encounter bugs, please open an issue or submit a pull request.
 
 1. Fork the repository.
-2. Create your feature branch (\git checkout -b feature/AmazingFeature\).
-3. Commit your changes (\git commit -m 'feat: Add some AmazingFeature'\).
-4. Push to the branch (\git push origin feature/AmazingFeature\).
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'feat: Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
 ## License
 
-Distributed under the MIT License. See \LICENSE\ for more information.
-
+Distributed under the MIT License. See `LICENSE` for more information.
