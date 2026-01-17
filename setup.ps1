@@ -149,6 +149,20 @@ function Show-PublicKey {
     Write-Host "----------------------------------------------------------------"
 }
 
+function Get-GitProfiles {
+    $configLines = git config --global --list
+    $profiles = @()
+    foreach ($line in $configLines) {
+        if ($line -match "^includeIf\.gitdir:(.+)\.path=(.+)$") {
+            $profiles += [PSCustomObject]@{
+                Path = $matches[1]
+                ConfigPath = $matches[2]
+            }
+        }
+    }
+    return $profiles
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {
@@ -160,5 +174,7 @@ function Main {
     Log-Success "Initial setup complete!"
 }
 
-# Run Main
-Main
+# Run Main only if executed directly
+if ($MyInvocation.InvocationName -eq $MyInvocation.MyCommand.Path) {
+    Main
+}

@@ -156,6 +156,21 @@ show_public_key() {
     echo "----------------------------------------------------------------"
 }
 
+get_git_profiles() {
+    # Parses git config for includeIf directives
+    # Format: includeIf.gitdir:<dir>.path=<config_file>
+    git config --global --list | grep "includeIf.gitdir:" | while read -r line; do
+        # Extract dir (remove 'includeIf.gitdir:' and everything after '.path=')
+        local dir=${line#includeIf.gitdir:}
+        dir=${dir%%.path=*}
+        
+        # Extract path (remove everything up to '=')
+        local path=${line#*=}
+        
+        echo "$dir:$path"
+    done
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
