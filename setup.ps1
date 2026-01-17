@@ -178,6 +178,65 @@ function Show-GitProfiles {
     }
 }
 
+function Save-GitProfile {
+    param(
+        [string]$TargetDir,
+        [string]$Name,
+        [string]$Email,
+        [string]$ProfileName
+    )
+
+    $configFile = Join-Path $HOME ".gitconfig-$ProfileName"
+    
+    Log-Info "Creating profile config at $configFile..."
+    $configContent = "[user]`n    name = $Name`n    email = $Email"
+    Set-Content -Path $configFile -Value $configContent
+
+    Log-Info "Updating global .gitconfig with includeIf..."
+    # Ensure directory path ends with / for includeIf and uses forward slashes for Git
+    $gitDir = $TargetDir.Replace('\', '/')
+    if (-not $gitDir.EndsWith('/')) { $gitDir += '/' }
+    
+    git config --global "includeIf.gitdir:$gitDir.path" "$configFile"
+    Log-Success "Profile saved and linked to $gitDir"
+}
+
+function Add-GitProfile {
+    Log-Info "--- Add New Git Profile ---"
+    
+    $targetDir = Read-Host "Enter the target directory path (e.g., C:\Work)"
+    # Handle ~
+    if ($targetDir.StartsWith("~")) {
+        $targetDir = $targetDir.Replace("~", $HOME)
+    }
+
+    if (-not (Test-Path $targetDir)) {
+        Log-Error "Directory does not exist: $targetDir"
+        return
+    }
+
+    $name = Read-Host "Enter user name for this profile"
+    $email = Read-Host "Enter email address for this profile"
+    
+    $profileName = Split-Path $targetDir -Leaf
+    $profileName = $profileName.ToLower()
+    
+    Save-GitProfile -TargetDir $targetDir -Name $name -Email $email -ProfileName $profileName
+    
+    $genSsh = Read-Host "Do you want to generate a new SSH key for this profile? (y/N)"
+    if ($genSsh -match "^[Yy]$") {
+        $sshDir = Join-Path $HOME ".ssh"
+        $keyFile = Join-Path $sshDir "id_ed25519_$profileName"
+        Log-Info "Generating key at $keyFile..."
+        
+        ssh-keygen -t ed25519 -C $email -f $keyFile -N '""'
+        Log-Success "SSH key generated."
+        Show-PublicKey "$keyFile.pub"
+        
+        Log-Info "Note: You may need to configure ~/.ssh/config to use this key for specific hosts."
+    }
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {

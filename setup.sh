@@ -189,6 +189,66 @@ list_profiles() {
     done
 }
 
+save_git_profile() {
+    local target_dir=$1
+    local name=$2
+    local email=$3
+    local profile_name=$4
+
+    local config_file="$HOME/.gitconfig-$profile_name"
+    
+    log_info "Creating profile config at $config_file..."
+    cat > "$config_file" <<EOF
+[user]
+    name = $name
+    email = $email
+EOF
+
+    log_info "Updating global .gitconfig with includeIf..."
+    # Ensure directory path ends with / for includeIf
+    [[ "$target_dir" != */ ]] && target_dir="$target_dir/"
+    
+    git config --global "includeIf.gitdir:$target_dir.path" "$config_file"
+    log_success "Profile saved and linked to $target_dir"
+}
+
+add_profile() {
+    log_info "--- Add New Git Profile ---"
+    
+    echo "Enter the target directory path (e.g., ~/Work): "
+    read target_dir
+    # Expand ~ if present
+    target_dir="${target_dir/#\~/$HOME}"
+    
+    if [ ! -d "$target_dir" ]; then
+        log_error "Directory does not exist: $target_dir"
+        return 1
+    fi
+
+    echo "Enter user name for this profile: "
+    read name
+    echo "Enter email address for this profile: "
+    read email
+    
+    # Generate a simple profile name from the directory
+    local profile_name=$(basename "$target_dir" | tr '[:upper:]' '[:lower:]')
+    
+    save_git_profile "$target_dir" "$name" "$email" "$profile_name"
+    
+    echo "Do you want to generate a new SSH key for this profile? (y/N): "
+    read gen_ssh
+    if [[ "$gen_ssh" =~ ^[Yy]$ ]]; then
+        # We need a unique key name
+        local key_file="$HOME/.ssh/id_ed25519_$profile_name"
+        log_info "Generating key at $key_file..."
+        ssh-keygen -t ed25519 -C "$email" -f "$key_file" -N ""
+        log_success "SSH key generated."
+        show_public_key "$key_file.pub"
+        
+        log_info "Note: You may need to configure ~/.ssh/config to use this key for specific hosts."
+    fi
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
