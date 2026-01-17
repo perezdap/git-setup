@@ -21,8 +21,8 @@ This track focuses on building the foundational `setup.sh` and `setup.ps1` scrip
     - [x] Write tests for SSH key detection.
     - [ ] Implement SSH key logic in `setup.sh`.
     - [ ] Implement SSH key logic in `setup.ps1`.
-- [ ] Task: Implement guided walkthrough for remote host setup.
-    - [ ] Write tests for walkthrough display.
+- [x] Task: Implement guided walkthrough for remote host setup. 7e63ab2
+    - [x] Write tests for walkthrough display.
     - [ ] Implement walkthrough in `setup.sh`.
     - [ ] Implement walkthrough in `setup.ps1`.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: SSH Key Setup & Walkthrough' (Protocol in workflow.md)
