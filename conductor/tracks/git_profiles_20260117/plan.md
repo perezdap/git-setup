@@ -36,9 +36,9 @@ This plan outlines the implementation of folder-based Git identity profiles usin
 - [x] Task: Write TDD tests for management functions. e805f87
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Profile Management (Edit/Remove)' (Protocol in workflow.md) 5fc3c23
 
-## Phase 4: Final Integration & Main Menu
+## Phase 4: Final Integration & Main Menu [checkpoint: b396722]
 - [x] Task: Update the main interactive menu to include Profile Management. 0ffdd99
     - [x] Bash: Add "Manage Folder Profiles" option to the main loop.
     - [x] PowerShell: Add "Manage Folder Profiles" option to the main loop.
 - [x] Task: Final cross-platform verification and cleanup. 0ffdd99
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Integration & Main Menu' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Final Integration & Main Menu' (Protocol in workflow.md) b396722
