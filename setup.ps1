@@ -163,6 +163,21 @@ function Get-GitProfiles {
     return $profiles
 }
 
+function Show-GitProfiles {
+    Log-Info "Current Folder-Based Profiles:"
+    
+    $profiles = Get-GitProfiles
+    if ($profiles.Count -eq 0) {
+        Write-Host "  No profiles found."
+        return
+    }
+
+    for ($i = 0; $i -lt $profiles.Count; $i++) {
+        $p = $profiles[$i]
+        Write-Host "  $($i+1). $($p.Path)  ->  $($p.ConfigPath)"
+    }
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {

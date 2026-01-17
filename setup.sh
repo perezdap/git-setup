@@ -171,6 +171,24 @@ get_git_profiles() {
     done
 }
 
+list_profiles() {
+    log_info "Current Folder-Based Profiles:"
+    
+    # Check if we have any output from get_git_profiles
+    if [ -z "$(get_git_profiles)" ]; then
+        echo "  No profiles found."
+        return
+    fi
+
+    local count=1
+    get_git_profiles | while read -r line; do
+        local dir=${line%%:*}
+        local config=${line#*:}
+        echo "  $count. $dir  ->  $config"
+        ((count++))
+    done
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
