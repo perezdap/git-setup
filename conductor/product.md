@@ -24,9 +24,10 @@ I want to build a automated/scripted setup for a git env here's what I want
 
 ## Essential Features
 - **Smart Installation:** Detects existing Git installations and offers automated installation/update paths for Windows and various *nix distributions.
-- **Interactive Profile Wizard:** A step-by-step guide to configure global and folder-specific identities, including GPG signing preferences.
+- **Interactive Profile Management:** A step-by-step guide to configure global and folder-specific identities (using Git's `includeIf` feature), with a dedicated sub-menu to list, add, edit, and remove profiles.
 - **Contextual Auth Guides:** Interactive instructions and automated helpers for setting up SSH keys and Personal Access Tokens for GitHub, GitLab, and private instances.
 - **Platform Compatibility:** Dual-implementation (Bash/PowerShell) ensuring native performance and compatibility on all target systems.
+- **Interactive Main Menu:** A command-loop interface that allows users to perform ongoing maintenance of their Git environment.
 
 ## Implementation Approach
 - **Native Scripting:** The tool will be implemented as a set of standalone, native scripts (Bash for Unix-like systems, PowerShell for Windows) to ensure zero dependencies beyond the OS itself.
