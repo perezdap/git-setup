@@ -6,10 +6,10 @@ This plan outlines the creation of a comprehensive README.md file, ensuring clea
 - [x] Task: Create initial README structure and introductory sections. 5d02a0c
     - [x] Write Title, Description, and Core Features sections.
     - [x] Define Prerequisites for both platforms.
-- [~] Task: Implement Installation & Usage sections.
-    - [ ] Write Direct Execution instructions (clone and run).
-    - [ ] Write One-Liner installation placeholders.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Core Documentation' (Protocol in workflow.md)
+- [x] Task: Implement Installation & Usage sections. 05f8ab7
+    - [x] Write Direct Execution instructions (clone and run).
+    - [x] Write One-Liner installation placeholders.
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Core Documentation' (Protocol in workflow.md) 05f8ab7
 
 ## Phase 2: Guidance & Finalization
 - [ ] Task: Add Troubleshooting and Contribution sections.
