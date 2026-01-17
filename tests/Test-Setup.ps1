@@ -24,4 +24,10 @@ if ($content -notmatch "function Set-GitIdentity") {
     exit 1
 }
 
+# Check for Set-SSHKeys function
+if ($content -notmatch "function Set-SSHKeys") {
+    Write-Error "FAIL: Set-SSHKeys function not found in setup.ps1"
+    exit 1
+}
+
 Write-Host "PASS: setup.ps1 structure check"

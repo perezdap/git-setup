@@ -96,12 +96,52 @@ function Set-GitIdentity {
     Log-Success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
 }
 
+function Set-SSHKeys {
+    Log-Info "Setting up SSH Keys..."
+    
+    $sshDir = Join-Path $HOME ".ssh"
+    $keyFile = Join-Path $sshDir "id_ed25519"
+    
+    if (Test-Path $keyFile) {
+        Log-Info "Existing SSH key found at $keyFile"
+        $useExisting = Read-Host "Do you want to use this key? (Y/n)"
+        if ($useExisting -notmatch "^[Nn]$") {
+            Show-PublicKey "$keyFile.pub"
+            return
+        }
+    }
+
+    Log-Info "Generating a new Ed25519 SSH key..."
+    if (-not (Test-Path $sshDir)) {
+        New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
+    }
+    
+    $email = git config --global user.email
+    ssh-keygen -t ed25519 -C "$email" -f $keyFile -N '""'
+    
+    Log-Success "SSH key generated successfully."
+    Show-PublicKey "$keyFile.pub"
+}
+
+function Show-PublicKey {
+    param([string]$PubKeyFile)
+    Log-Info "Your Public SSH Key:"
+    Write-Host "----------------------------------------------------------------"
+    if (Test-Path $PubKeyFile) {
+        Get-Content $PubKeyFile
+    } else {
+        Log-Error "Public key file not found: $PubKeyFile"
+    }
+    Write-Host "----------------------------------------------------------------"
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {
         Install-Git
     }
     Set-GitIdentity
+    Set-SSHKeys
 }
 
 # Run Main

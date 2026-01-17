@@ -106,10 +106,46 @@ configure_identity() {
     log_success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
 }
 
+setup_ssh() {
+    log_info "Setting up SSH Keys..."
+    
+    local ssh_dir="$HOME/.ssh"
+    local key_file="$ssh_dir/id_ed25519"
+    
+    if [ -f "$key_file" ]; then
+        log_info "Existing SSH key found at $key_file"
+        echo "Do you want to use this key? (Y/n): "
+        read use_existing
+        if [[ ! "$use_existing" =~ ^[Nn]$ ]]; then
+            show_public_key "$key_file.pub"
+            return 0
+        fi
+    fi
+
+    log_info "Generating a new Ed25519 SSH key..."
+    mkdir -p "$ssh_dir"
+    chmod 700 "$ssh_dir"
+    
+    local email=$(git config --global user.email)
+    ssh-keygen -t ed25519 -C "$email" -f "$key_file" -N ""
+    
+    log_success "SSH key generated successfully."
+    show_public_key "$key_file.pub"
+}
+
+show_public_key() {
+    local pub_key_file=$1
+    log_info "Your Public SSH Key:"
+    echo "----------------------------------------------------------------"
+    cat "$pub_key_file"
+    echo "----------------------------------------------------------------"
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
     configure_identity
+    setup_ssh
 }
 
 # Only run main if executed directly

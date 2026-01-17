@@ -28,4 +28,10 @@ if ! grep -q "configure_identity" ./setup.sh; then
     exit 1
 fi
 
+# Check for setup_ssh function
+if ! grep -q "setup_ssh" ./setup.sh; then
+    echo "FAIL: setup_ssh function not found in setup.sh"
+    exit 1
+fi
+
 echo "PASS: setup.sh structure check"
