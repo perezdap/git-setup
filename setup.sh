@@ -249,6 +249,80 @@ add_profile() {
     fi
 }
 
+remove_profile() {
+    log_info "--- Remove Git Profile ---"
+    
+    local profiles=$(get_git_profiles)
+    if [ -z "$profiles" ]; then
+        log_error "No profiles found to remove."
+        return
+    fi
+
+    list_profiles
+    echo "Enter the number of the profile to remove: "
+    read num
+    
+    local selected=$(get_git_profiles | sed -n "${num}p")
+    if [ -z "$selected" ]; then
+        log_error "Invalid selection."
+        return
+    fi
+
+    local dir=${selected%%:*}
+    local config=${selected#*:}
+    
+    log_info "Removing profile for $dir..."
+    git config --global --unset "includeIf.gitdir:$dir.path"
+    
+    if [ -f "$config" ]; then
+        rm "$config"
+        log_success "Deleted config file: $config"
+    fi
+    
+    log_success "Profile removed."
+}
+
+edit_profile() {
+    log_info "--- Edit Git Profile ---"
+    
+    local profiles=$(get_git_profiles)
+    if [ -z "$profiles" ]; then
+        log_error "No profiles found to edit."
+        return
+    fi
+
+    list_profiles
+    echo "Enter the number of the profile to edit: "
+    read num
+    
+    local selected=$(get_git_profiles | sed -n "${num}p")
+    if [ -z "$selected" ]; then
+        log_error "Invalid selection."
+        return
+    fi
+
+    local dir=${selected%%:*}
+    local config=${selected#*:}
+    
+    log_info "Editing profile for $dir (stored in $config)"
+    
+    local current_name=$(git config -f "$config" user.name)
+    local current_email=$(git config -f "$config" user.email)
+    
+    echo "Enter new name [$current_name]: "
+    read name
+    name=${name:-$current_name}
+    
+    echo "Enter new email [$current_email]: "
+    read email
+    email=${email:-$current_email}
+    
+    git config -f "$config" user.name "$name"
+    git config -f "$config" user.email "$email"
+    
+    log_success "Profile updated."
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git

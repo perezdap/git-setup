@@ -237,6 +237,72 @@ function Add-GitProfile {
     }
 }
 
+function Remove-GitProfile {
+    Log-Info "--- Remove Git Profile ---"
+    
+    $profiles = Get-GitProfiles
+    if ($profiles.Count -eq 0) {
+        Log-Error "No profiles found to remove."
+        return
+    }
+
+    Show-GitProfiles
+    $num = Read-Host "Enter the number of the profile to remove"
+    
+    if (-not [int]::TryParse($num, [ref]$idx) -or $idx -lt 1 -or $idx -gt $profiles.Count) {
+        Log-Error "Invalid selection."
+        return
+    }
+
+    $selected = $profiles[$idx - 1]
+    Log-Info "Removing profile for $($selected.Path)..."
+    
+    git config --global --unset "includeIf.gitdir:$($selected.Path).path"
+    
+    if (Test-Path $selected.ConfigPath) {
+        Remove-Item $selected.ConfigPath
+        Log-Success "Deleted config file: $($selected.ConfigPath)"
+    }
+    
+    Log-Success "Profile removed."
+}
+
+function Edit-GitProfile {
+    Log-Info "--- Edit Git Profile ---"
+    
+    $profiles = Get-GitProfiles
+    if ($profiles.Count -eq 0) {
+        Log-Error "No profiles found to edit."
+        return
+    }
+
+    Show-GitProfiles
+    $num = Read-Host "Enter the number of the profile to edit"
+    
+    if (-not [int]::TryParse($num, [ref]$idx) -or $idx -lt 1 -or $idx -gt $profiles.Count) {
+        Log-Error "Invalid selection."
+        return
+    }
+
+    $selected = $profiles[$idx - 1]
+    Log-Info "Editing profile for $($selected.Path) (stored in $($selected.ConfigPath))"
+    
+    # We can use git config -f to read/write specific files
+    $currentName = git config -f $selected.ConfigPath user.name
+    $currentEmail = git config -f $selected.ConfigPath user.email
+    
+    $name = Read-Host "Enter new name [$currentName]"
+    if (-not $name) { $name = $currentName }
+    
+    $email = Read-Host "Enter new email [$currentEmail]"
+    if (-not $email) { $email = $currentEmail }
+    
+    git config -f $selected.ConfigPath user.name "$name"
+    git config -f $selected.ConfigPath user.email "$email"
+    
+    Log-Success "Profile updated."
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {
