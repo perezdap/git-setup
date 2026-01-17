@@ -11,7 +11,7 @@ This plan outlines the implementation of folder-based Git identity profiles usin
     - [x] PowerShell: Create `Show-GitProfiles` function.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Profile Listing' (Protocol in workflow.md) 45738b7
 
-## Phase 2: Interactive Profile Creation
+## Phase 2: Interactive Profile Creation [checkpoint: 31ff979]
 - [x] Task: Implement the "Add Profile" wizard. b77a164
     - [x] Bash: Create `add_profile` function with prompts for path, name, and email.
     - [x] PowerShell: Create `Add-GitProfile` function with prompts for path, name, and email.
@@ -24,7 +24,7 @@ This plan outlines the implementation of folder-based Git identity profiles usin
 - [x] Task: Write TDD tests for profile creation. b77a164
     - [x] Verify `.gitconfig` modifications.
     - [x] Verify secondary config file content.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Interactive Profile Creation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Interactive Profile Creation' (Protocol in workflow.md) 31ff979
 
 ## Phase 3: Profile Management (Edit/Remove)
 - [ ] Task: Implement "Remove Profile" functionality.
