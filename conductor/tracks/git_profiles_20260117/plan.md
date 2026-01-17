@@ -12,18 +12,18 @@ This plan outlines the implementation of folder-based Git identity profiles usin
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Profile Listing' (Protocol in workflow.md) 45738b7
 
 ## Phase 2: Interactive Profile Creation
-- [ ] Task: Implement the "Add Profile" wizard.
-    - [ ] Bash: Create `add_profile` function with prompts for path, name, and email.
-    - [ ] PowerShell: Create `Add-GitProfile` function with prompts for path, name, and email.
-- [ ] Task: Implement `includeIf` configuration logic.
-    - [ ] Bash: Update `~/.gitconfig` and create the secondary config file.
-    - [ ] PowerShell: Update `~/.gitconfig` and create the secondary config file.
-- [ ] Task: Implement optional SSH key generation within the wizard.
-    - [ ] Bash: Integrate `setup_ssh` logic into `add_profile`.
-    - [ ] PowerShell: Integrate `Set-SSHKeys` logic into `Add-GitProfile`.
-- [ ] Task: Write TDD tests for profile creation.
-    - [ ] Verify `.gitconfig` modifications.
-    - [ ] Verify secondary config file content.
+- [x] Task: Implement the "Add Profile" wizard. b77a164
+    - [x] Bash: Create `add_profile` function with prompts for path, name, and email.
+    - [x] PowerShell: Create `Add-GitProfile` function with prompts for path, name, and email.
+- [x] Task: Implement `includeIf` configuration logic. b77a164
+    - [x] Bash: Update `~/.gitconfig` and create the secondary config file.
+    - [x] PowerShell: Update `~/.gitconfig` and create the secondary config file.
+- [x] Task: Implement optional SSH key generation within the wizard. b77a164
+    - [x] Bash: Integrate `setup_ssh` logic into `add_profile`.
+    - [x] PowerShell: Integrate `Set-SSHKeys` logic into `Add-GitProfile`.
+- [x] Task: Write TDD tests for profile creation. b77a164
+    - [x] Verify `.gitconfig` modifications.
+    - [x] Verify secondary config file content.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Interactive Profile Creation' (Protocol in workflow.md)
 
 ## Phase 3: Profile Management (Edit/Remove)
