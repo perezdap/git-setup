@@ -7,8 +7,8 @@ This track focuses on building the foundational `setup.sh` and `setup.ps1` scrip
     - [x] Write tests for platform detection and logging.
     - [ ] Implement `setup.sh` skeleton.
     - [ ] Implement `setup.ps1` skeleton.
-- [ ] Task: Implement Git detection and installation logic.
-    - [ ] Write tests for Git detection.
+- [x] Task: Implement Git detection and installation logic. 14678bb
+    - [x] Write tests for Git detection.
     - [ ] Implement Git detection/installation in `setup.sh`.
     - [ ] Implement Git detection/installation in `setup.ps1`.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Git Detection' (Protocol in workflow.md)
