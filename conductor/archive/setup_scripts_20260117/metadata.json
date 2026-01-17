@@ -1,0 +1,8 @@
+{
+  "track_id": "setup_scripts_20260117",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-17T11:20:00Z",
+  "updated_at": "2026-01-17T11:20:00Z",
+  "description": "Create the cross-platform setup scripts (setup.sh, setup.ps1) to check/install Git, configure global user identity, and interactively set up SSH keys."
+}
