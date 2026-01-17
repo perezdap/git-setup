@@ -18,4 +18,10 @@ if ($content -notmatch "function Test-GitInstalled") {
     exit 1
 }
 
+# Check for Set-GitIdentity function
+if ($content -notmatch "function Set-GitIdentity") {
+    Write-Error "FAIL: Set-GitIdentity function not found in setup.ps1"
+    exit 1
+}
+
 Write-Host "PASS: setup.ps1 structure check"

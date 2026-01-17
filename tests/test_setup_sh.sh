@@ -22,4 +22,10 @@ if ! grep -q "check_git" ./setup.sh; then
     exit 1
 fi
 
+# Check for configure_identity function
+if ! grep -q "configure_identity" ./setup.sh; then
+    echo "FAIL: configure_identity function not found in setup.sh"
+    exit 1
+fi
+
 echo "PASS: setup.sh structure check"

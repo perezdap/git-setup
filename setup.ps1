@@ -64,11 +64,44 @@ function Install-Git {
     }
 }
 
+function Set-GitIdentity {
+    Log-Info "Configuring Global Git Identity..."
+    
+    $currentName = git config --global user.name
+    $currentEmail = git config --global user.email
+    
+    if ($currentName -or $currentEmail) {
+        Log-Info "Current identity: $currentName <$currentEmail>"
+        $changeIdentity = Read-Host "Do you want to change it? (y/N)"
+        if ($changeIdentity -notmatch "^[Yy]$") {
+            return
+        }
+    }
+
+    $name = Read-Host "Enter your full name"
+    while (-not $name) {
+        Log-Error "Name cannot be empty."
+        $name = Read-Host "Enter your full name"
+    }
+
+    $email = Read-Host "Enter your email address"
+    while ($email -notmatch "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$") {
+        Log-Error "Invalid email format."
+        $email = Read-Host "Enter your email address"
+    }
+
+    git config --global user.name "$name"
+    git config --global user.email "$email"
+    
+    Log-Success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {
         Install-Git
     }
+    Set-GitIdentity
 }
 
 # Run Main

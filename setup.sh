@@ -69,9 +69,47 @@ install_git() {
     fi
 }
 
+configure_identity() {
+    log_info "Configuring Global Git Identity..."
+    
+    local current_name=$(git config --global user.name)
+    local current_email=$(git config --global user.email)
+    
+    if [ ! -z "$current_name" ] || [ ! -z "$current_email" ]; then
+        log_info "Current identity: $current_name <$current_email>"
+        echo "Do you want to change it? (y/N): "
+        read change_identity
+        if [[ ! "$change_identity" =~ ^[Yy]$ ]]; then
+            return 0
+        fi
+    fi
+
+    echo "Enter your full name: "
+    read name
+    while [ -z "$name" ]; do
+        log_error "Name cannot be empty."
+        echo "Enter your full name: "
+        read name
+    done
+
+    echo "Enter your email address: "
+    read email
+    while [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; do
+        log_error "Invalid email format."
+        echo "Enter your email address: "
+        read email
+    done
+
+    git config --global user.name "$name"
+    git config --global user.email "$email"
+    
+    log_success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
+    configure_identity
 }
 
 # Only run main if executed directly
