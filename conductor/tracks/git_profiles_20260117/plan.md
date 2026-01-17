@@ -27,13 +27,13 @@ This plan outlines the implementation of folder-based Git identity profiles usin
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Interactive Profile Creation' (Protocol in workflow.md) 31ff979
 
 ## Phase 3: Profile Management (Edit/Remove)
-- [ ] Task: Implement "Remove Profile" functionality.
-    - [ ] Bash: Create `remove_profile` function (cleanup `.gitconfig` and delete secondary file).
-    - [ ] PowerShell: Create `Remove-GitProfile` function.
-- [ ] Task: Implement "Edit Profile" functionality.
-    - [ ] Bash: Create `edit_profile` function to update existing secondary config files.
-    - [ ] PowerShell: Create `Edit-GitProfile` function.
-- [ ] Task: Write TDD tests for management functions.
+- [x] Task: Implement "Remove Profile" functionality. e805f87
+    - [x] Bash: Create `remove_profile` function (cleanup `.gitconfig` and delete secondary file).
+    - [x] PowerShell: Create `Remove-GitProfile` function.
+- [x] Task: Implement "Edit Profile" functionality. e805f87
+    - [x] Bash: Create `edit_profile` function to update existing secondary config files.
+    - [x] PowerShell: Create `Edit-GitProfile` function.
+- [x] Task: Write TDD tests for management functions. e805f87
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Profile Management (Edit/Remove)' (Protocol in workflow.md)
 
 ## Phase 4: Final Integration & Main Menu
