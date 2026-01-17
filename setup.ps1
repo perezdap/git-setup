@@ -299,7 +299,7 @@ function Edit-GitProfile {
     $email = Read-Host "Enter new email [$currentEmail]"
     if (-not $email) { $email = $currentEmail }
     
-    log_success "Profile updated."
+    Log-Success "Profile updated."
 }
 
 function Show-ProfileMenu {
@@ -348,7 +348,7 @@ function Main {
     }
 }
 
-# Run Main only if executed directly
-if ($MyInvocation.InvocationName -eq $MyInvocation.MyCommand.Path) {
+# Run Main only if executed directly (not dot-sourced)
+if ($MyInvocation.InvocationName -ne '.') {
     Main
 }
