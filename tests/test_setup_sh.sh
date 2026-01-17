@@ -16,4 +16,10 @@ if ! grep -q "log_info" ./setup.sh; then
     exit 1
 fi
 
+# Check for check_git function
+if ! grep -q "check_git" ./setup.sh; then
+    echo "FAIL: check_git function not found in setup.sh"
+    exit 1
+fi
+
 echo "PASS: setup.sh structure check"

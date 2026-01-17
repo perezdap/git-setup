@@ -12,4 +12,10 @@ if ($content -notmatch "function Log-Info") {
     exit 1
 }
 
+# Check for Test-GitInstalled function
+if ($content -notmatch "function Test-GitInstalled") {
+    Write-Error "FAIL: Test-GitInstalled function not found in setup.ps1"
+    exit 1
+}
+
 Write-Host "PASS: setup.ps1 structure check"
