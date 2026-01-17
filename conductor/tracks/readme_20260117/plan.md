@@ -9,10 +9,9 @@ This plan outlines the creation of a comprehensive README.md file, ensuring clea
 - [x] Task: Implement Installation & Usage sections. 05f8ab7
     - [x] Write Direct Execution instructions (clone and run).
     - [x] Write One-Liner installation placeholders.
-- [x] Task: Conductor - User Manual Verification 'Phase 1: Core Documentation' (Protocol in workflow.md) 05f8ab7
-
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Core Documentation' (Protocol in workflow.md) eeaddb8
 ## Phase 2: Guidance & Finalization
-- [ ] Task: Add Troubleshooting and Contribution sections.
+- [~] Task: Add Troubleshooting and Contribution sections.
     - [ ] Document common Windows execution policy issues.
     - [ ] Add a basic contribution guide and license reference.
 - [ ] Task: Final review and formatting.
