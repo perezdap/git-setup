@@ -3,8 +3,8 @@
 This track focuses on building the foundational `setup.sh` and `setup.ps1` scripts.
 
 ## Phase 1: Foundation & Git Detection
-- [ ] Task: Create script skeletons with basic logging and platform detection.
-    - [ ] Write tests for platform detection and logging.
+- [x] Task: Create script skeletons with basic logging and platform detection. efff780
+    - [x] Write tests for platform detection and logging.
     - [ ] Implement `setup.sh` skeleton.
     - [ ] Implement `setup.ps1` skeleton.
 - [ ] Task: Implement Git detection and installation logic.
