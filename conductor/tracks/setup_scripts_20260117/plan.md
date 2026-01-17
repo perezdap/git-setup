@@ -16,13 +16,9 @@ This track focuses on building the foundational `setup.sh` and `setup.ps1` scrip
     - [ ] Implement identity configuration in `setup.ps1`.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Global Identity Configuration' (Protocol in workflow.md) e764b85
 
-## Phase 3: SSH Key Setup & Walkthrough
+## Phase 3: SSH Key Setup & Walkthrough [checkpoint: 3ff4028]
 - [x] Task: Implement SSH key detection and generation. c8ae6f9
     - [x] Write tests for SSH key detection.
-    - [ ] Implement SSH key logic in `setup.sh`.
-    - [ ] Implement SSH key logic in `setup.ps1`.
 - [x] Task: Implement guided walkthrough for remote host setup. 7e63ab2
     - [x] Write tests for walkthrough display.
-    - [ ] Implement walkthrough in `setup.sh`.
-    - [ ] Implement walkthrough in `setup.ps1`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: SSH Key Setup & Walkthrough' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: SSH Key Setup & Walkthrough' (Protocol in workflow.md) 3ff4028
