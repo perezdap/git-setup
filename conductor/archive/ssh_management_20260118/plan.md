@@ -36,12 +36,12 @@ Update the Git Profile wizard to include SSH key assignment.
     - [x] **PowerShell:** Add delete option to SSH menu and implement logic.
 - [x] Task: Conductor - User Manual Verification 'Profile Integration' (Protocol in workflow.md)
 
-## Phase 4: Final Verification and Documentation
+## Phase 4: Final Verification and Documentation [checkpoint: d1b4c9c]
 Ensure cross-platform parity and update any instructions.
 
-- [ ] Task: Cross-Platform Path Verification
-    - [ ] Verify `core.sshCommand` paths work correctly in PowerShell with Git for Windows.
-    - [ ] Verify paths work correctly in Bash on *nix.
-- [ ] Task: Update Internal Documentation
-    - [ ] Add notes on SSH key management to the interactive help/guides.
-- [ ] Task: Conductor - User Manual Verification 'Final Verification and Documentation' (Protocol in workflow.md)
+- [x] Task: Cross-Platform Path Verification
+    - [x] Verify `core.sshCommand` paths work correctly in PowerShell with Git for Windows.
+    - [x] Verify paths work correctly in Bash on *nix.
+- [x] Task: Update Internal Documentation
+    - [x] Add notes on SSH key management to the interactive help/guides.
+- [x] Task: Conductor - User Manual Verification 'Final Verification and Documentation' (Protocol in workflow.md)
