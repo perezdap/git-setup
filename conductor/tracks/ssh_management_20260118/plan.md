@@ -11,7 +11,7 @@ Focus on building the underlying utility functions for both Bash and PowerShell 
     - [x] **PowerShell:** Create function to wrap `ssh-keygen.exe` with interactive naming and output display.
 - [x] Task: Conductor - User Manual Verification 'SSH Discovery and Generation Core' (Protocol in workflow.md)
 
-## Phase 2: Standalone SSH Manager Menu
+## Phase 2: Standalone SSH Manager Menu [checkpoint: 447c938]
 Add the interface for managing SSH keys independently of Git profiles.
 
 - [x] Task: Create SSH Management Menu
@@ -20,7 +20,7 @@ Add the interface for managing SSH keys independently of Git profiles.
 - [x] Task: Implement "List Keys" and "View Public Key" actions
     - [x] **Bash:** Connect menu actions to Discovery/Generation utilities.
     - [x] **PowerShell:** Connect menu actions to Discovery/Generation utilities.
-- [~] Task: Conductor - User Manual Verification 'Standalone SSH Manager Menu' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Standalone SSH Manager Menu' (Protocol in workflow.md)
 
 ## Phase 3: Profile Integration (The "Hybrid" Flow)
 Update the Git Profile wizard to include SSH key assignment.
