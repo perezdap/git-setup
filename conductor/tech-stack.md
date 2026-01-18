@@ -15,5 +15,5 @@
     - **macOS:** Homebrew (optional/suggested for Git installation).
 
 ## Configuration Management
-- **Git Config:** Heavy usage of `git config --global` and `git config --includeIf` for folder-specific profile management.
+- **Git Config:** Heavy usage of `git config --global`, `git config --includeIf`, and `core.sshCommand` for identity and authentication management.
 - **Filesystem:** Native directory traversal and file manipulation provided by Bash/PowerShell.
