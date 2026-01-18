@@ -5,8 +5,12 @@ A cross-platform, interactive tool to seamlessly configure your Git environment 
 ## Core Features
 - **Cross-Platform Support**: Native scripts for Windows (PowerShell) and Linux/macOS (Bash).
 - **Interactive Setup**: Guided configuration for global user identity (Name/Email).
-- **Folder-Based Profiles**: Manage distinct identities (e.g., Work vs. Personal) for specific directory trees using Git's `includeIf` feature.
-- **SSH Key Management**: Automated detection and Ed25519 key generation with a guided walkthrough for GitHub/GitLab.
+- **Folder-Based Profiles**: Manage distinct identities (e.g., Work vs. Personal) for specific directory trees. **Now supports assigning specific SSH keys to each profile.**
+- **Advanced SSH Key Management**: 
+  - Manage multiple SSH keys via a dedicated menu.
+  - Generate keys with custom names.
+  - Delete unused keys directly from the tool.
+  - Automatically map keys to projects using `core.sshCommand`.
 - **Zero Dependencies**: Relies only on standard OS tools and Git.
 
 ## Prerequisites
