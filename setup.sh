@@ -75,35 +75,85 @@ configure_identity() {
     local current_name=$(git config --global user.name)
     local current_email=$(git config --global user.email)
     
+    local change_identity="y"
     if [ ! -z "$current_name" ] || [ ! -z "$current_email" ]; then
         log_info "Current identity: $current_name <$current_email>"
-        echo "Do you want to change it? (y/N): "
+        echo "Do you want to change your name/email? (y/N): "
         read change_identity
-        if [[ ! "$change_identity" =~ ^[Yy]$ ]]; then
-            return 0
-        fi
     fi
 
-    echo "Enter your full name: "
-    read name
-    while [ -z "$name" ]; do
-        log_error "Name cannot be empty."
+    if [[ "$change_identity" =~ ^[Yy]$ ]]; then
         echo "Enter your full name: "
         read name
-    done
+        while [ -z "$name" ]; do
+            log_error "Name cannot be empty."
+            echo "Enter your full name: "
+            read name
+        done
 
-    echo "Enter your email address: "
-    read email
-    while [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; do
-        log_error "Invalid email format."
         echo "Enter your email address: "
         read email
-    done
+        while [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; do
+            log_error "Invalid email format."
+            echo "Enter your email address: "
+            read email
+        done
 
-    git config --global user.name "$name"
-    git config --global user.email "$email"
+        git config --global user.name "$name"
+        git config --global user.email "$email"
+        log_success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
+    fi
+
+    # --- Part 2: Global SSH Key ---
+    local current_ssh=$(git config --global core.sshCommand | sed 's/ssh -i //')
+    log_info "Current Global SSH Key: ${current_ssh:-System Default}"
     
-    log_success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
+    echo "Do you want to configure the global SSH key? (y/N): "
+    read configure_ssh
+    
+    if [[ "$configure_ssh" =~ ^[Yy]$ ]]; then
+        echo "1. Select existing key from .ssh"
+        echo "2. Generate new key"
+        echo "3. Use System Default (Clear custom config)"
+        echo "4. Skip"
+        echo -n "Select an option [1-4]: "
+        read ssh_opt
+        
+        case $ssh_opt in
+            1)
+                log_info "Existing SSH Keys:"
+                local keys=$(list_ssh_keys)
+                if [ -z "$keys" ]; then
+                    log_error "No keys found."
+                else
+                    list_ssh_keys | nl
+                    echo -n "Enter the number: "
+                    read key_num
+                    local selected_key=$(list_ssh_keys | sed -n "${key_num}p")
+                    if [ ! -z "$selected_key" ]; then
+                        git config --global core.sshCommand "ssh -i $HOME/.ssh/$selected_key"
+                        log_success "Global SSH key set to: $HOME/.ssh/$selected_key"
+                    fi
+                fi
+                ;;
+            2)
+                generate_new_ssh_key
+                echo -n "Enter the name of the key you just created (e.g. id_ed25519_work): "
+                read key_name
+                local key_path="$HOME/.ssh/id_ed25519_$key_name"
+                if [ -f "$key_path" ]; then
+                    git config --global core.sshCommand "ssh -i $key_path"
+                    log_success "Global SSH key set to: $key_path"
+                else
+                    log_error "Key not found: $key_path"
+                fi
+                ;;
+            3)
+                git config --global --unset core.sshCommand
+                log_success "Reverted to System Default SSH key."
+                ;;
+        esac
+    fi
 }
 
 setup_ssh() {

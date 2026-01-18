@@ -67,33 +67,87 @@ function Install-Git {
 function Set-GitIdentity {
     Log-Info "Configuring Global Git Identity..."
     
+    # --- Part 1: User Name & Email ---
     $currentName = git config --global user.name
     $currentEmail = git config --global user.email
     
+    $changeIdentity = "y"
     if ($currentName -or $currentEmail) {
         Log-Info "Current identity: $currentName <$currentEmail>"
-        $changeIdentity = Read-Host "Do you want to change it? (y/N)"
-        if ($changeIdentity -notmatch "^[Yy]$") {
-            return
+        $changeIdentity = Read-Host "Do you want to change your name/email? (y/N)"
+    }
+
+    if ($changeIdentity -match "^[Yy]$") {
+        $name = Read-Host "Enter your full name"
+        while (-not $name) {
+            Log-Error "Name cannot be empty."
+            $name = Read-Host "Enter your full name"
+        }
+
+        $email = Read-Host "Enter your email address"
+        while ($email -notmatch "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$") {
+            Log-Error "Invalid email format."
+            $email = Read-Host "Enter your email address"
+        }
+
+        git config --global user.name "$name"
+        git config --global user.email "$email"
+        Log-Success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
+    }
+
+    # --- Part 2: Global SSH Key ---
+    $currentSsh = git config --global core.sshCommand
+    if ($currentSsh) { $currentSsh = $currentSsh.Replace("ssh -i ", "") }
+    
+    Log-Info "Current Global SSH Key: $($currentSsh -or 'System Default')"
+    
+    $configureSsh = Read-Host "Do you want to configure the global SSH key? (y/N)"
+    if ($configureSsh -match "^[Yy]$") {
+        Write-Host "1. Select existing key from .ssh"
+        Write-Host "2. Generate new key"
+        Write-Host "3. Use System Default (Clear custom config)"
+        Write-Host "4. Skip"
+        
+        $sshOpt = Read-Host "Select an option [1-4]"
+        
+        switch ($sshOpt) {
+            "1" {
+                Log-Info "Existing SSH Keys:"
+                $keys = Get-SSHKeys
+                if ($keys.Count -eq 0) {
+                    Log-Error "No keys found."
+                } else {
+                    for ($i = 0; $i -lt $keys.Count; $i++) {
+                        Write-Host "  $($i+1). $($keys[$i].Name)"
+                    }
+                    $num = Read-Host "Enter the number"
+                    $idx = 0
+                    if ([int]::TryParse($num, [ref]$idx) -and $idx -ge 1 -and $idx -le $keys.Count) {
+                        $selectedKey = $keys[$idx-1].FullName.Replace('\', '/')
+                        git config --global core.sshCommand "ssh -i $selectedKey"
+                        Log-Success "Global SSH key set to: $selectedKey"
+                    }
+                }
+            }
+            "2" {
+                New-SSHKey -Email (git config --global user.email)
+                $keyName = Read-Host "Enter the name of the key you just created (e.g. id_ed25519_work)"
+                $sshDir = Join-Path $HOME ".ssh"
+                $keyPath = Join-Path $sshDir "id_ed25519_$keyName"
+                if (Test-Path $keyPath) {
+                    $keyPath = $keyPath.Replace('\', '/')
+                    git config --global core.sshCommand "ssh -i $keyPath"
+                    Log-Success "Global SSH key set to: $keyPath"
+                } else {
+                    Log-Error "Key not found: $keyPath"
+                }
+            }
+            "3" {
+                git config --global --unset core.sshCommand
+                Log-Success "Reverted to System Default SSH key."
+            }
         }
     }
-
-    $name = Read-Host "Enter your full name"
-    while (-not $name) {
-        Log-Error "Name cannot be empty."
-        $name = Read-Host "Enter your full name"
-    }
-
-    $email = Read-Host "Enter your email address"
-    while ($email -notmatch "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$") {
-        Log-Error "Invalid email format."
-        $email = Read-Host "Enter your email address"
-    }
-
-    git config --global user.name "$name"
-    git config --global user.email "$email"
-    
-    Log-Success "Global identity configured: $(git config --global user.name) <$(git config --global user.email)>"
 }
 
 function Set-SSHKeys {
