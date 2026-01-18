@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: SSH Key Management**
+- [x] **Track: SSH Key Management**
 *Link: [./tracks/ssh_management_20260118/](./tracks/ssh_management_20260118/)*
