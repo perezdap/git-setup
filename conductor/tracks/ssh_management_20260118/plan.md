@@ -14,13 +14,13 @@ Focus on building the underlying utility functions for both Bash and PowerShell 
 ## Phase 2: Standalone SSH Manager Menu
 Add the interface for managing SSH keys independently of Git profiles.
 
-- [ ] Task: Create SSH Management Menu
-    - [ ] **Bash:** Implement "Manage SSH Keys" menu item and logic.
-    - [ ] **PowerShell:** Implement "Manage SSH Keys" menu item and logic.
-- [ ] Task: Implement "List Keys" and "View Public Key" actions
-    - [ ] **Bash:** Connect menu actions to Discovery/Generation utilities.
-    - [ ] **PowerShell:** Connect menu actions to Discovery/Generation utilities.
-- [ ] Task: Conductor - User Manual Verification 'Standalone SSH Manager Menu' (Protocol in workflow.md)
+- [x] Task: Create SSH Management Menu
+    - [x] **Bash:** Implement "Manage SSH Keys" menu item and logic.
+    - [x] **PowerShell:** Implement "Manage SSH Keys" menu item and logic.
+- [x] Task: Implement "List Keys" and "View Public Key" actions
+    - [x] **Bash:** Connect menu actions to Discovery/Generation utilities.
+    - [x] **PowerShell:** Connect menu actions to Discovery/Generation utilities.
+- [~] Task: Conductor - User Manual Verification 'Standalone SSH Manager Menu' (Protocol in workflow.md)
 
 ## Phase 3: Profile Integration (The "Hybrid" Flow)
 Update the Git Profile wizard to include SSH key assignment.

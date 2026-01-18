@@ -398,6 +398,46 @@ manage_profiles() {
     done
 }
 
+manage_ssh_keys() {
+    while true; do
+        log_info "--- Manage SSH Keys ---"
+        echo "1. List Existing Keys"
+        echo "2. Generate New SSH Key"
+        echo "3. View Public Key"
+        echo "4. Back to Main Menu"
+        echo -n "Select an option [1-4]: "
+        read ssh_choice
+        
+        case $ssh_choice in
+            1) 
+                log_info "Existing SSH Keys:"
+                list_ssh_keys
+                ;;
+            2) generate_new_ssh_key ;;
+            3)
+                log_info "Select a key to view its public content:"
+                local keys=$(list_ssh_keys)
+                if [ -z "$keys" ]; then
+                    log_error "No keys found."
+                else
+                    list_ssh_keys | nl
+                    echo -n "Enter the number: "
+                    read key_num
+                    local selected_key=$(list_ssh_keys | sed -n "${key_num}p")
+                    if [ -z "$selected_key" ]; then
+                        log_error "Invalid selection."
+                    else
+                        show_public_key "$HOME/.ssh/$selected_key.pub"
+                    fi
+                fi
+                ;;
+            4) return ;;
+            *) log_error "Invalid option." ;;
+        esac
+        echo ""
+    done
+}
+
 main() {
     log_info "Starting Git Environment Setup on $(uname -s)..."
     check_git
@@ -407,15 +447,17 @@ main() {
         echo "1. Configure Global Identity"
         echo "2. Setup SSH Keys"
         echo "3. Manage Folder-Based Profiles"
-        echo "4. Exit"
-        echo -n "Select an option [1-4]: "
+        echo "4. Manage SSH Keys"
+        echo "5. Exit"
+        echo -n "Select an option [1-5]: "
         read main_choice
         
         case $main_choice in
             1) configure_identity ;;
             2) setup_ssh; show_ssh_walkthrough ;;
             3) manage_profiles ;;
-            4) log_success "Exiting. Happy coding!"; exit 0 ;;
+            4) manage_ssh_keys ;;
+            5) log_success "Exiting. Happy coding!"; exit 0 ;;
             *) log_error "Invalid option." ;;
         esac
     done

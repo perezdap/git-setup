@@ -374,6 +374,46 @@ function Show-ProfileMenu {
     }
 }
 
+function Show-SSHKeyMenu {
+    while ($true) {
+        Log-Info "--- Manage SSH Keys ---"
+        Write-Host "1. List Existing Keys"
+        Write-Host "2. Generate New SSH Key"
+        Write-Host "3. View Public Key"
+        Write-Host "4. Back to Main Menu"
+        $choice = Read-Host "Select an option [1-4]"
+        
+        switch ($choice) {
+            "1" { 
+                Log-Info "Existing SSH Keys:"
+                Get-SSHKeys | ForEach-Object { Write-Host "  $($_.Name)" }
+            }
+            "2" { New-SSHKey }
+            "3" {
+                Log-Info "Select a key to view its public content:"
+                $keys = Get-SSHKeys
+                if ($keys.Count -eq 0) {
+                    Log-Error "No keys found."
+                } else {
+                    for ($i = 0; $i -lt $keys.Count; $i++) {
+                        Write-Host "  $($i+1). $($keys[$i].Name)"
+                    }
+                    $num = Read-Host "Enter the number"
+                    $idx = 0
+                    if ([int]::TryParse($num, [ref]$idx) -and $idx -ge 1 -and $idx -le $keys.Count) {
+                        Show-PublicKey "$($keys[$idx-1].FullName).pub"
+                    } else {
+                        Log-Error "Invalid selection."
+                    }
+                }
+            }
+            "4" { return }
+            default { Log-Error "Invalid option." }
+        }
+        Write-Host ""
+    }
+}
+
 function Main {
     Log-Info "Starting Git Environment Setup on Windows..."
     if (-not (Test-GitInstalled)) {
@@ -385,14 +425,16 @@ function Main {
         Write-Host "1. Configure Global Identity"
         Write-Host "2. Setup SSH Keys"
         Write-Host "3. Manage Folder-Based Profiles"
-        Write-Host "4. Exit"
-        $mainChoice = Read-Host "Select an option [1-4]"
+        Write-Host "4. Manage SSH Keys"
+        Write-Host "5. Exit"
+        $mainChoice = Read-Host "Select an option [1-5]"
         
         switch ($mainChoice) {
             "1" { Set-GitIdentity }
             "2" { Set-SSHKeys; Show-SSHWalkthrough }
             "3" { Show-ProfileMenu }
-            "4" { Log-Success "Exiting. Happy coding!"; return }
+            "4" { Show-SSHKeyMenu }
+            "5" { Log-Success "Exiting. Happy coding!"; return }
             default { Log-Error "Invalid option." }
         }
     }
