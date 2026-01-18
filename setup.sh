@@ -133,6 +133,58 @@ setup_ssh() {
     show_public_key "$key_file.pub"
 }
 
+list_ssh_keys() {
+    local target_dir="${1:-$HOME/.ssh}"
+    
+    if [ ! -d "$target_dir" ]; then
+        return
+    fi
+    
+    # List files in .ssh, ignoring known non-key files and public keys
+    # We look for files that are NOT directories
+    find "$target_dir" -maxdepth 1 -type f | while read -r file; do
+        local filename=$(basename "$file")
+        
+        # Filter out common non-private-key files
+        if [[ "$filename" == *.pub ]] || \
+           [[ "$filename" == "known_hosts" ]] || \
+           [[ "$filename" == "known_hosts.old" ]] || \
+           [[ "$filename" == "authorized_keys" ]] || \
+           [[ "$filename" == "config" ]] || \
+           [[ "$filename" == "environment" ]]; then
+            continue
+        fi
+        
+        # Optional: Check if file starts with "---- BEGIN" to be sure it's a key?
+        # For now, sticking to file exclusion as implied by spec/test
+        echo "$filename"
+    done
+}
+
+generate_new_ssh_key() {
+    local target_dir="${1:-$HOME/.ssh}"
+    mkdir -p "$target_dir"
+    chmod 700 "$target_dir"
+
+    echo "Enter a name for the new key (e.g., 'work', 'personal')."
+    echo "The key will be saved as 'id_ed25519_<name>': "
+    read key_suffix
+    
+    while [ -z "$key_suffix" ]; do
+        log_error "Key name cannot be empty."
+        read key_suffix
+    done
+
+    local key_file="$target_dir/id_ed25519_$key_suffix"
+    local email=$(git config --global user.email)
+    
+    log_info "Generating key: $key_file for $email"
+    ssh-keygen -t ed25519 -C "$email" -f "$key_file" -N ""
+    
+    log_success "SSH key generated."
+    show_public_key "$key_file.pub"
+}
+
 show_ssh_walkthrough() {
     log_info "Guided Walkthrough: Adding your SSH key to GitHub/GitLab"
     echo ""

@@ -1,0 +1,8 @@
+{
+  "track_id": "ssh_management_20260118",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-18T10:00:00Z",
+  "updated_at": "2026-01-18T10:00:00Z",
+  "description": "Automate the setup of pointing git to different ssh keys depending on what product I'm working with in this project, similar to how we're setting up git profiles within projects"
+}

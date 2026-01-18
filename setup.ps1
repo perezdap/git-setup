@@ -123,6 +123,56 @@ function Set-SSHKeys {
     Show-PublicKey "$keyFile.pub"
 }
 
+function Get-SSHKeys {
+    param([string]$Path = (Join-Path $HOME ".ssh"))
+    
+    if (-not (Test-Path $Path)) {
+        return @()
+    }
+
+    $excluded = @("known_hosts", "known_hosts.old", "authorized_keys", "config", "environment")
+    
+    # Get all files that don't end in .pub and aren't in the excluded list
+    Get-ChildItem -Path $Path -File | Where-Object {
+        $_.Extension -ne ".pub" -and $excluded -notcontains $_.Name
+    } | ForEach-Object {
+        # Return simplified object
+        [PSCustomObject]@{
+            Name = $_.Name
+            FullName = $_.FullName
+        }
+    }
+}
+
+function New-SSHKey {
+    param(
+        [string]$Name,
+        [string]$Path = (Join-Path $HOME ".ssh")
+    )
+    
+    if (-not (Test-Path $Path)) {
+        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    }
+
+    if (-not $Name) {
+        $Name = Read-Host "Enter a name for the new key (e.g., 'work', 'personal'). The key will be saved as 'id_ed25519_<name>'"
+    }
+
+    while (-not $Name) {
+        Log-Error "Key name cannot be empty."
+        $Name = Read-Host "Enter a name for the new key"
+    }
+
+    $keyFile = Join-Path $Path "id_ed25519_$Name"
+    $email = git config --global user.email
+    
+    Log-Info "Generating key: $keyFile for $email"
+    ssh-keygen -t ed25519 -C "$email" -f $keyFile -N '""'
+    
+    Log-Success "SSH key generated."
+    Show-PublicKey "$keyFile.pub"
+}
+
 function Show-SSHWalkthrough {
     Log-Info "Guided Walkthrough: Adding your SSH key to GitHub/GitLab"
     Write-Host ""
