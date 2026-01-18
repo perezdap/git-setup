@@ -147,7 +147,8 @@ function Get-SSHKeys {
 function New-SSHKey {
     param(
         [string]$Name,
-        [string]$Path = (Join-Path $HOME ".ssh")
+        [string]$Path = (Join-Path $HOME ".ssh"),
+        [string]$Email
     )
     
     if (-not (Test-Path $Path)) {
@@ -164,10 +165,13 @@ function New-SSHKey {
     }
 
     $keyFile = Join-Path $Path "id_ed25519_$Name"
-    $email = git config --global user.email
     
-    Log-Info "Generating key: $keyFile for $email"
-    ssh-keygen -t ed25519 -C "$email" -f $keyFile -N '""'
+    if (-not $Email) {
+        $Email = git config --global user.email
+    }
+    
+    Log-Info "Generating key: $keyFile for $Email"
+    ssh-keygen -t ed25519 -C "$Email" -f $keyFile -N '""'
     
     Log-Success "SSH key generated."
     Show-PublicKey "$keyFile.pub"
@@ -233,13 +237,23 @@ function Save-GitProfile {
         [string]$TargetDir,
         [string]$Name,
         [string]$Email,
-        [string]$ProfileName
+        [string]$ProfileName,
+        [string]$SshKey
     )
 
     $configFile = Join-Path $HOME ".gitconfig-$ProfileName"
     
     Log-Info "Creating profile config at $configFile..."
     $configContent = "[user]`n    name = $Name`n    email = $Email"
+    
+    if ($SshKey) {
+        Log-Info "Assigning SSH key $SshKey to profile..."
+        $sshKeyPath = Join-Path $HOME ".ssh\$SshKey"
+        # Git prefers forward slashes in config
+        $sshKeyPath = $sshKeyPath.Replace('\', '/')
+        $configContent += "`n`n[core]`n    sshCommand = ssh -i $sshKeyPath"
+    }
+
     Set-Content -Path $configFile -Value $configContent
 
     Log-Info "Updating global .gitconfig with includeIf..."
@@ -271,20 +285,38 @@ function Add-GitProfile {
     $profileName = Split-Path $targetDir -Leaf
     $profileName = $profileName.ToLower()
     
-    Save-GitProfile -TargetDir $targetDir -Name $name -Email $email -ProfileName $profileName
-    
-    $genSsh = Read-Host "Do you want to generate a new SSH key for this profile? (y/N)"
-    if ($genSsh -match "^[Yy]$") {
-        $sshDir = Join-Path $HOME ".ssh"
-        $keyFile = Join-Path $sshDir "id_ed25519_$profileName"
-        Log-Info "Generating key at $keyFile..."
-        
-        ssh-keygen -t ed25519 -C $email -f $keyFile -N '""'
-        Log-Success "SSH key generated."
-        Show-PublicKey "$keyFile.pub"
-        
-        Log-Info "Note: You may need to configure ~/.ssh/config to use this key for specific hosts."
+    $selectedSshKey = ""
+    $assignSsh = Read-Host "Do you want to assign an SSH key to this profile? (y/N)"
+    if ($assignSsh -match "^[Yy]$") {
+        Write-Host "1. Select existing key"
+        Write-Host "2. Generate new key"
+        Write-Host "3. Skip"
+        $sshOpt = Read-Host "Select an option [1-3]"
+        switch ($sshOpt) {
+            "1" {
+                Log-Info "Existing SSH Keys:"
+                $keys = Get-SSHKeys
+                if ($keys.Count -eq 0) {
+                    Log-Error "No keys found."
+                } else {
+                    for ($i = 0; $i -lt $keys.Count; $i++) {
+                        Write-Host "  $($i+1). $($keys[$i].Name)"
+                    }
+                    $num = Read-Host "Enter the number"
+                    $idx = 0
+                    if ([int]::TryParse($num, [ref]$idx) -and $idx -ge 1 -and $idx -le $keys.Count) {
+                        $selectedSshKey = $keys[$idx-1].Name
+                    }
+                }
+            }
+            "2" {
+                New-SSHKey -Email $email
+                $selectedSshKey = Read-Host "Enter the name of the key you just created (e.g. id_ed25519_work)"
+            }
+        }
     }
+
+    Save-GitProfile -TargetDir $targetDir -Name $name -Email $email -ProfileName $profileName -SshKey $selectedSshKey
 }
 
 function Remove-GitProfile {
@@ -342,12 +374,38 @@ function Edit-GitProfile {
     # We can use git config -f to read/write specific files
     $currentName = git config -f $selected.ConfigPath user.name
     $currentEmail = git config -f $selected.ConfigPath user.email
+    $currentSsh = git config -f $selected.ConfigPath core.sshCommand
+    if ($currentSsh) { $currentSsh = $currentSsh.Replace("ssh -i ", "") }
     
     $name = Read-Host "Enter new name [$currentName]"
     if (-not $name) { $name = $currentName }
     
     $email = Read-Host "Enter new email [$currentEmail]"
     if (-not $email) { $email = $currentEmail }
+    
+    git config -f $selected.ConfigPath user.name "$name"
+    git config -f $selected.ConfigPath user.email "$email"
+
+    Log-Info "Current SSH Key: $($currentSsh -or 'None')"
+    $changeSsh = Read-Host "Do you want to change SSH key? (y/N)"
+    if ($changeSsh -match "^[Yy]$") {
+        Log-Info "Existing SSH Keys:"
+        $keys = Get-SSHKeys
+        for ($i = 0; $i -lt $keys.Count; $i++) {
+            Write-Host "  $($i+1). $($keys[$i].Name)"
+        }
+        Write-Host "  0. Remove SSH key assignment"
+        $keyNum = Read-Host "Enter the number"
+        if ($keyNum -eq "0") {
+            git config -f $selected.ConfigPath --unset core.sshCommand
+        } else {
+            $kIdx = 0
+            if ([int]::TryParse($keyNum, [ref]$kIdx) -and $kIdx -ge 1 -and $kIdx -le $keys.Count) {
+                $selectedSshKey = $keys[$kIdx-1].FullName.Replace('\', '/')
+                git config -f $selected.ConfigPath core.sshCommand "ssh -i $selectedSshKey"
+            }
+        }
+    }
     
     Log-Success "Profile updated."
 }
@@ -374,14 +432,51 @@ function Show-ProfileMenu {
     }
 }
 
+function Remove-SSHKey {
+    Log-Info "--- Delete SSH Key ---"
+    
+    $keys = Get-SSHKeys
+    if ($keys.Count -eq 0) {
+        Log-Error "No keys found."
+        return
+    }
+
+    for ($i = 0; $i -lt $keys.Count; $i++) {
+        Write-Host "  $($i+1). $($keys[$i].Name)"
+    }
+    
+    $num = Read-Host "Select the key number to delete"
+    $idx = 0
+    if (-not [int]::TryParse($num, [ref]$idx) -or $idx -lt 1 -or $idx -gt $keys.Count) {
+        Log-Error "Invalid selection."
+        return
+    }
+
+    $selected = $keys[$idx - 1]
+    
+    Log-Info "WARNING: This will permanently delete '$($selected.Name)' and its public key."
+    $confirm = Read-Host "Are you sure? (type 'yes' to confirm)"
+    
+    if ($confirm -eq "yes") {
+        Remove-Item $selected.FullName -Force
+        if (Test-Path "$($selected.FullName).pub") {
+            Remove-Item "$($selected.FullName).pub" -Force
+        }
+        Log-Success "Deleted key: $($selected.Name)"
+    } else {
+        Log-Info "Deletion cancelled."
+    }
+}
+
 function Show-SSHKeyMenu {
     while ($true) {
         Log-Info "--- Manage SSH Keys ---"
         Write-Host "1. List Existing Keys"
         Write-Host "2. Generate New SSH Key"
         Write-Host "3. View Public Key"
-        Write-Host "4. Back to Main Menu"
-        $choice = Read-Host "Select an option [1-4]"
+        Write-Host "4. Delete SSH Key"
+        Write-Host "5. Back to Main Menu"
+        $choice = Read-Host "Select an option [1-5]"
         
         switch ($choice) {
             "1" { 
@@ -407,7 +502,8 @@ function Show-SSHKeyMenu {
                     }
                 }
             }
-            "4" { return }
+            "4" { Remove-SSHKey }
+            "5" { return }
             default { Log-Error "Invalid option." }
         }
         Write-Host ""

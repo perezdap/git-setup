@@ -25,13 +25,16 @@ Add the interface for managing SSH keys independently of Git profiles.
 ## Phase 3: Profile Integration (The "Hybrid" Flow)
 Update the Git Profile wizard to include SSH key assignment.
 
-- [ ] Task: Update Profile Creation/Editing Logic
-    - [ ] **Bash:** Add SSH key selection/generation step to the profile wizard.
-    - [ ] **PowerShell:** Add SSH key selection/generation step to the profile wizard.
-- [ ] Task: Implement `core.sshCommand` Configuration
-    - [ ] **Bash:** Update profile file writing logic to include `core.sshCommand` with native paths.
-    - [ ] **PowerShell:** Update profile file writing logic to include `core.sshCommand` with native paths.
-- [ ] Task: Conductor - User Manual Verification 'Profile Integration' (Protocol in workflow.md)
+- [x] Task: Update Profile Creation/Editing Logic
+    - [x] **Bash:** Add SSH key selection/generation step to the profile wizard.
+    - [x] **PowerShell:** Add SSH key selection/generation step to the profile wizard.
+- [x] Task: Implement `core.sshCommand` Configuration
+    - [x] **Bash:** Update profile file writing logic to include `core.sshCommand` with native paths.
+    - [x] **PowerShell:** Update profile file writing logic to include `core.sshCommand` with native paths.
+- [x] Task: Implement "Delete SSH Key" functionality
+    - [x] **Bash:** Add delete option to SSH menu and implement logic.
+    - [x] **PowerShell:** Add delete option to SSH menu and implement logic.
+- [~] Task: Conductor - User Manual Verification 'Profile Integration' (Protocol in workflow.md)
 
 ## Phase 4: Final Verification and Documentation
 Ensure cross-platform parity and update any instructions.

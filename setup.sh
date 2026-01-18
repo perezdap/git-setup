@@ -163,6 +163,7 @@ list_ssh_keys() {
 
 generate_new_ssh_key() {
     local target_dir="${1:-$HOME/.ssh}"
+    local email_arg="$2"
     mkdir -p "$target_dir"
     chmod 700 "$target_dir"
 
@@ -176,7 +177,7 @@ generate_new_ssh_key() {
     done
 
     local key_file="$target_dir/id_ed25519_$key_suffix"
-    local email=$(git config --global user.email)
+    local email=${email_arg:-$(git config --global user.email)}
     
     log_info "Generating key: $key_file for $email"
     ssh-keygen -t ed25519 -C "$email" -f "$key_file" -N ""
@@ -246,6 +247,7 @@ save_git_profile() {
     local name=$2
     local email=$3
     local profile_name=$4
+    local ssh_key=$5
 
     local config_file="$HOME/.gitconfig-$profile_name"
     
@@ -255,6 +257,16 @@ save_git_profile() {
     name = $name
     email = $email
 EOF
+
+    if [ ! -z "$ssh_key" ]; then
+        log_info "Assigning SSH key $ssh_key to profile..."
+        # Ensure path is absolute for sshCommand
+        local ssh_key_path="$HOME/.ssh/$ssh_key"
+        cat >> "$config_file" <<EOF
+[core]
+    sshCommand = ssh -i $ssh_key_path
+EOF
+    fi
 
     log_info "Updating global .gitconfig with includeIf..."
     # Ensure directory path ends with / for includeIf
@@ -285,20 +297,40 @@ add_profile() {
     # Generate a simple profile name from the directory
     local profile_name=$(basename "$target_dir" | tr '[:upper:]' '[:lower:]')
     
-    save_git_profile "$target_dir" "$name" "$email" "$profile_name"
-    
-    echo "Do you want to generate a new SSH key for this profile? (y/N): "
-    read gen_ssh
-    if [[ "$gen_ssh" =~ ^[Yy]$ ]]; then
-        # We need a unique key name
-        local key_file="$HOME/.ssh/id_ed25519_$profile_name"
-        log_info "Generating key at $key_file..."
-        ssh-keygen -t ed25519 -C "$email" -f "$key_file" -N ""
-        log_success "SSH key generated."
-        show_public_key "$key_file.pub"
-        
-        log_info "Note: You may need to configure ~/.ssh/config to use this key for specific hosts."
+    local selected_ssh_key=""
+    echo "Do you want to assign an SSH key to this profile? (y/N): "
+    read assign_ssh
+    if [[ "$assign_ssh" =~ ^[Yy]$ ]]; then
+        echo "1. Select existing key"
+        echo "2. Generate new key"
+        echo "3. Skip"
+        echo -n "Select an option [1-3]: "
+        read ssh_opt
+        case $ssh_opt in
+            1)
+                log_info "Existing SSH Keys:"
+                local keys=$(list_ssh_keys)
+                if [ -z "$keys" ]; then
+                    log_error "No keys found. You may want to generate one."
+                else
+                    list_ssh_keys | nl
+                    echo -n "Enter the number: "
+                    read key_num
+                    selected_ssh_key=$(list_ssh_keys | sed -n "${key_num}p")
+                fi
+                ;;
+            2)
+                generate_new_ssh_key "$HOME/.ssh" "$email"
+                # Assume the new key is the one we want. 
+                # We need generate_new_ssh_key to return or set a variable.
+                # For now, let's just ask for the name again or improve the flow.
+                echo -n "Enter the name of the key you just created (e.g. id_ed25519_work): "
+                read selected_ssh_key
+                ;;
+        esac
     fi
+
+    save_git_profile "$target_dir" "$name" "$email" "$profile_name" "$selected_ssh_key"
 }
 
 remove_profile() {
@@ -360,6 +392,7 @@ edit_profile() {
     
     local current_name=$(git config -f "$config" user.name)
     local current_email=$(git config -f "$config" user.email)
+    local current_ssh=$(git config -f "$config" core.sshCommand | sed 's/ssh -i //')
     
     echo "Enter new name [$current_name]: "
     read name
@@ -371,6 +404,26 @@ edit_profile() {
     
     git config -f "$config" user.name "$name"
     git config -f "$config" user.email "$email"
+    
+    echo "Current SSH Key: ${current_ssh:-None}"
+    echo "Do you want to change SSH key? (y/N): "
+    read change_ssh
+    if [[ "$change_ssh" =~ ^[Yy]$ ]]; then
+        log_info "Existing SSH Keys:"
+        list_ssh_keys | nl
+        echo "0. Remove SSH key assignment"
+        echo -n "Enter the number: "
+        read key_num
+        if [ "$key_num" == "0" ]; then
+            git config -f "$config" --unset core.sshCommand
+        else
+            local selected_ssh_key=$(list_ssh_keys | sed -n "${key_num}p")
+            if [ ! -z "$selected_ssh_key" ]; then
+                local ssh_key_path="$HOME/.ssh/$selected_ssh_key"
+                git config -f "$config" core.sshCommand "ssh -i $ssh_key_path"
+            fi
+        fi
+    fi
     
     log_success "Profile updated."
 }
@@ -398,14 +451,47 @@ manage_profiles() {
     done
 }
 
+delete_ssh_key() {
+    log_info "--- Delete SSH Key ---"
+    
+    local keys=$(list_ssh_keys)
+    if [ -z "$keys" ]; then
+        log_error "No keys found."
+        return
+    fi
+    
+    list_ssh_keys | nl
+    echo -n "Select the key number to delete: "
+    read key_num
+    
+    local selected_key=$(list_ssh_keys | sed -n "${key_num}p")
+    if [ -z "$selected_key" ]; then
+        log_error "Invalid selection."
+        return
+    fi
+    
+    echo "WARNING: This will permanently delete '$selected_key' and its public key."
+    echo "Are you sure? (type 'yes' to confirm): "
+    read confirm
+    
+    if [ "$confirm" == "yes" ]; then
+        local key_path="$HOME/.ssh/$selected_key"
+        rm -f "$key_path" "$key_path.pub"
+        log_success "Deleted key: $selected_key"
+    else
+        log_info "Deletion cancelled."
+    fi
+}
+
 manage_ssh_keys() {
     while true; do
         log_info "--- Manage SSH Keys ---"
         echo "1. List Existing Keys"
         echo "2. Generate New SSH Key"
         echo "3. View Public Key"
-        echo "4. Back to Main Menu"
-        echo -n "Select an option [1-4]: "
+        echo "4. Delete SSH Key"
+        echo "5. Back to Main Menu"
+        echo -n "Select an option [1-5]: "
         read ssh_choice
         
         case $ssh_choice in
@@ -431,7 +517,8 @@ manage_ssh_keys() {
                     fi
                 fi
                 ;;
-            4) return ;;
+            4) delete_ssh_key ;;
+            5) return ;;
             *) log_error "Invalid option." ;;
         esac
         echo ""
