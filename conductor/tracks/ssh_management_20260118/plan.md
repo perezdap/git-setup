@@ -1,6 +1,6 @@
 # Implementation Plan: SSH Key Management
 
-## Phase 1: SSH Discovery and Generation Core
+## Phase 1: SSH Discovery and Generation Core [checkpoint: d5d260f]
 Focus on building the underlying utility functions for both Bash and PowerShell to handle SSH keys.
 
 - [x] Task: Implement SSH Key Discovery Utility
@@ -9,7 +9,7 @@ Focus on building the underlying utility functions for both Bash and PowerShell 
 - [x] Task: Implement SSH Key Generation Utility
     - [x] **Bash:** Create function to wrap `ssh-keygen` with interactive naming and output display.
     - [x] **PowerShell:** Create function to wrap `ssh-keygen.exe` with interactive naming and output display.
-- [~] Task: Conductor - User Manual Verification 'SSH Discovery and Generation Core' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'SSH Discovery and Generation Core' (Protocol in workflow.md)
 
 ## Phase 2: Standalone SSH Manager Menu
 Add the interface for managing SSH keys independently of Git profiles.
