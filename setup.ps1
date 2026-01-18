@@ -176,7 +176,8 @@ function Set-SSHKeys {
     }
 
     $email = git config --global user.email
-    ssh-keygen -t ed25519 -C "$email" -f $keyFile -N '""'
+    $genArgs = "-t ed25519 -C `"$email`" -f `"$keyFile`" -N `"`""
+    Start-Process -FilePath "ssh-keygen" -ArgumentList $genArgs -NoNewWindow -Wait
     
     Log-Success "SSH key generated successfully."
     Show-PublicKey "$keyFile.pub"
@@ -242,7 +243,8 @@ function New-SSHKey {
         }
     }
 
-    ssh-keygen -t ed25519 -C "$Email" -f $keyFile -N '""'
+    $genArgs = "-t ed25519 -C `"$Email`" -f `"$keyFile`" -N `"`""
+    Start-Process -FilePath "ssh-keygen" -ArgumentList $genArgs -NoNewWindow -Wait
     
     Log-Success "SSH key generated."
     Show-PublicKey "$keyFile.pub"
