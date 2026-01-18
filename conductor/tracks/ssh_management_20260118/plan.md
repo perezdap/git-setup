@@ -22,7 +22,7 @@ Add the interface for managing SSH keys independently of Git profiles.
     - [x] **PowerShell:** Connect menu actions to Discovery/Generation utilities.
 - [x] Task: Conductor - User Manual Verification 'Standalone SSH Manager Menu' (Protocol in workflow.md)
 
-## Phase 3: Profile Integration (The "Hybrid" Flow)
+## Phase 3: Profile Integration (The "Hybrid" Flow) [checkpoint: 97aad52]
 Update the Git Profile wizard to include SSH key assignment.
 
 - [x] Task: Update Profile Creation/Editing Logic
@@ -34,7 +34,7 @@ Update the Git Profile wizard to include SSH key assignment.
 - [x] Task: Implement "Delete SSH Key" functionality
     - [x] **Bash:** Add delete option to SSH menu and implement logic.
     - [x] **PowerShell:** Add delete option to SSH menu and implement logic.
-- [~] Task: Conductor - User Manual Verification 'Profile Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Profile Integration' (Protocol in workflow.md)
 
 ## Phase 4: Final Verification and Documentation
 Ensure cross-platform parity and update any instructions.
