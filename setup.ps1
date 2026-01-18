@@ -178,15 +178,18 @@ function New-SSHKey {
 }
 
 function Show-SSHWalkthrough {
-    Log-Info "Guided Walkthrough: Adding your SSH key to GitHub/GitLab"
+    Log-Info "Guided Walkthrough: SSH Key Management"
     Write-Host ""
-    Write-Host "1. Copy the public key shown above (starting with 'ssh-ed25519...')"
-    Write-Host "2. Log in to your Git provider (GitHub, GitLab, etc.)"
-    Write-Host "3. Go to 'Settings' -> 'SSH and GPG keys'"
-    Write-Host "4. Click 'New SSH Key'"
-    Write-Host "5. Give it a descriptive title (e.g., 'My Windows Laptop')"
-    Write-Host "6. Paste your key into the 'Key' field"
-    Write-Host "7. Click 'Add SSH Key'"
+    Write-Host "This tool now supports multiple SSH keys mapped to specific folders."
+    Write-Host ""
+    Write-Host "1. Create or Select a key in 'Manage SSH Keys' or during 'Add Profile'."
+    Write-Host "2. Copy the public key content (starting with 'ssh-ed25519...')."
+    Write-Host "3. Log in to your Git provider (GitHub, GitLab, etc.)."
+    Write-Host "4. Go to 'Settings' -> 'SSH and GPG keys' and click 'New SSH Key'."
+    Write-Host "5. Give it a title and paste your key."
+    Write-Host ""
+    Write-Host "When you enter a folder linked to a profile with an assigned key,"
+    Write-Host "Git will automatically use that specific key for authentication."
     Write-Host ""
     Read-Host "Press Enter when you have completed these steps"
 }

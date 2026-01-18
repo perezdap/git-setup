@@ -187,15 +187,18 @@ generate_new_ssh_key() {
 }
 
 show_ssh_walkthrough() {
-    log_info "Guided Walkthrough: Adding your SSH key to GitHub/GitLab"
+    log_info "Guided Walkthrough: SSH Key Management"
     echo ""
-    echo "1. Copy the public key shown above (starting with 'ssh-ed25519...')"
-    echo "2. Log in to your Git provider (GitHub, GitLab, etc.)"
-    echo "3. Go to 'Settings' -> 'SSH and GPG keys'"
-    echo "4. Click 'New SSH Key'"
-    echo "5. Give it a descriptive title (e.g., 'My Windows Laptop')"
-    echo "6. Paste your key into the 'Key' field"
-    echo "7. Click 'Add SSH Key'"
+    echo "This tool now supports multiple SSH keys mapped to specific folders."
+    echo ""
+    echo "1. Create or Select a key in 'Manage SSH Keys' or during 'Add Profile'."
+    echo "2. Copy the public key content (starting with 'ssh-ed25519...')."
+    echo "3. Log in to your Git provider (GitHub, GitLab, etc.)."
+    echo "4. Go to 'Settings' -> 'SSH and GPG keys' and click 'New SSH Key'."
+    echo "5. Give it a title and paste your key."
+    echo ""
+    echo "When you enter a folder linked to a profile with an assigned key,"
+    echo "Git will automatically use that specific key for authentication."
     echo ""
     echo "Press Enter when you have completed these steps..."
     read
