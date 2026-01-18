@@ -170,6 +170,11 @@ function Set-SSHKeys {
         New-Item -ItemType Directory -Path $sshDir -Force | Out-Null
     }
     
+    if (Test-Path $keyFile) {
+        Remove-Item $keyFile -Force
+        if (Test-Path "$keyFile.pub") { Remove-Item "$keyFile.pub" -Force }
+    }
+
     $email = git config --global user.email
     ssh-keygen -t ed25519 -C "$email" -f $keyFile -N '""'
     
@@ -225,6 +230,18 @@ function New-SSHKey {
     }
     
     Log-Info "Generating key: $keyFile for $Email"
+    
+    if (Test-Path $keyFile) {
+        $force = Read-Host "Key '$Name' already exists. Overwrite? (y/N)"
+        if ($force -match "^[Yy]$") {
+            Remove-Item $keyFile -Force
+            if (Test-Path "$keyFile.pub") { Remove-Item "$keyFile.pub" -Force }
+        } else {
+            Log-Info "Operation cancelled."
+            return
+        }
+    }
+
     ssh-keygen -t ed25519 -C "$Email" -f $keyFile -N '""'
     
     Log-Success "SSH key generated."
